@@ -1,0 +1,26 @@
+{
+  "name": "sharescreen",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloudflare Pages (Advanced Mode) + Worker WebSocket with Durable Object",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build:pages": "esbuild apps/pages/src/worker.ts --bundle --format=esm --outfile=apps/pages/public/_worker.js",
+    "build:worker": "esbuild apps/worker/src/worker.ts --bundle --format=esm --outfile=apps/worker/worker.js",
+    "watch:pages": "esbuild apps/pages/src/worker.ts --bundle --format=esm --outfile=apps/pages/public/_worker.js --watch",
+    "watch:worker": "esbuild apps/worker/src/worker.ts --bundle --format=esm --outfile=apps/worker/worker.js --watch",
+    "dev:worker": "cd apps/worker && wrangler dev --name sharescreen-worker",
+    "dev:pages": "cd apps/pages && wrangler pages dev public",
+    "dev:all": "concurrently -k \"npm:watch:pages\" \"npm:watch:worker\" \"npm:dev:worker\" \"npm:dev:pages\"",
+    "deploy:worker": "npm run build:worker && cd apps/worker && wrangler deploy",
+    "deploy:pages": "npm run build:pages && cd apps/pages && wrangler pages deploy public",
+    "deploy:all": "npm run deploy:worker && npm run deploy:pages"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250304.0",
+    "esbuild": "^0.23.0",
+    "typescript": "^5.6.3",
+    "wrangler": "^4.33.1",
+    "concurrently": "^9.2.1"
+  }
+}

@@ -1,0 +1,33 @@
+# Node / NPM
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build outputs
+apps/worker/worker.js
+apps/pages/public/_worker.js
+
+# Wrangler state (local KV/DO persistence, tmp files)
+.wrangler/
+apps/worker/.wrangler/
+apps/pages/.wrangler/
+
+# TypeScript
+*.tsbuildinfo
+tsconfig.tsbuildinfo
+
+# Logs
+*.log
+logs/
+wrangler-debug.log
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+*.swp

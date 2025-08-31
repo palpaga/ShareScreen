@@ -1,0 +1,11 @@
+name = "sharescreen-worker"
+main = "worker.js"
+compatibility_date = "2025-08-31"
+
+[[durable_objects.bindings]]
+name = "ROOM"
+class_name = "RoomDO"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["RoomDO"]
