@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,109 +8,39 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <style>
-    :root { --bg:#0b0f18; --panel:#111827; --muted:#9aa4b2; --accent:#84cc16; --danger:#ef4444; --ok:#22c55e; }
-    html, body { height:100% }
-    body { margin:0; background:linear-gradient(180deg,#0b0f18 0%,#0a101a 100%); color:#e5e7eb; font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell }
-    .container { max-width:980px; margin:0 auto; padding:32px 20px }
-
-    /* HERO */
-    .hero { min-height:70vh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; text-align:center }
-    .brand { display:inline-flex; align-items:center; gap:10px; margin-bottom:6px }
-    .brand .dot { width:12px; height:12px; border-radius:999px; background:var(--accent); box-shadow:0 0 18px var(--accent) }
-    h1 { font-size:44px; line-height:1.1; margin:0 0 6px }
-    .muted { color:var(--muted); font-size:16px; max-width:70ch; margin:0 auto }
-
-    /* CTA */
-    .cta { display:flex; flex-direction:column; gap:12px; justify-content:center; margin-top:10px; align-items:center }
-    .cta-row { display:flex; gap:12px; align-items:stretch; justify-content:center; flex-wrap:nowrap }
-    .btn { appearance:none; border:0; cursor:pointer; border-radius:14px; padding:14px 18px; font-weight:800; font-size:17px }
-    .btn-primary { background:linear-gradient(90deg,var(--accent),#a3e635); color:#0a0f19; box-shadow:0 10px 24px rgba(132,204,22,.28) }
-    .btn-secondary { background:transparent; color:#e5e7eb; border:1.25px solid rgba(255,255,255,.16) }
-
-    .join-inline { display:flex; align-items:stretch; gap:10px; flex-wrap:nowrap }
-    .join-inline .input { min-width:220px }
-
-    .input { background:#0f1625; border:1px solid rgba(255,255,255,.10); color:#e5e7eb; padding:12px 14px; border-radius:12px; font-size:16px; width:min(320px,100%) }
-    .input:invalid { border-color:#f59e0b }
-
-    /* Stage / HUD */
-    .stage { position:fixed; inset:0; background:#000; display:none }
-    .stage.active { display:block }
-    video { position:absolute; inset:0; width:100%; height:100%; object-fit:contain; background:#000 }
-
-    .hud { position:absolute; inset:0 }
-    .hud-top { position:absolute; top:12px; left:12px; right:12px; display:flex; gap:12px; align-items:start; pointer-events:none; padding-right:56px; z-index:30 }
-    .pill { pointer-events:auto; background:rgba(15,23,42,.7); border:1px solid rgba(255,255,255,.08); color:#e5e7eb; border-radius:999px; padding:8px 12px; font-size:13px; display:inline-flex; gap:8px; align-items:center }
-    .badge { background:rgba(34,197,94,.15); color:#86efac; border:1px solid rgba(34,197,94,.3) }
-
-    /* Quit */
-    .quit { position:absolute; top:12px; right:12px; pointer-events:auto; z-index:40 }
-    .btn-quit { background:var(--danger); color:#fff; border:0; border-radius:10px; padding:8px 10px; font-weight:700; cursor:pointer }
-
-    .hud-right { margin-left:auto; display:flex; gap:8px }
-    .copy { display:inline-flex; gap:8px; align-items:center; opacity:.85 }
-    .copy input { width:300px; max-width:48vw; font-size:12px; opacity:.9 }
-    .copy .btn { padding:8px 10px; font-weight:700; font-size:13px; border-radius:10px }
-
-    /* Bottom controls */
-    .hud-bottom { position:absolute; left:12px; right:12px; bottom:12px; display:flex; gap:8px; pointer-events:auto; align-items:center }
-    .left-controls { display:flex; gap:10px; align-items:center }
-    .right-controls { margin-left:auto; display:flex; gap:8px }
-
-    .vol { display:flex; align-items:center; gap:8px }
-    .vol label { margin:0; min-width:52px }
-    .slider { appearance:none; width:180px; height:6px; border-radius:999px; background:rgba(255,255,255,.15); outline:none }
-    .slider::-webkit-slider-thumb { appearance:none; width:16px; height:16px; border-radius:50%; background:var(--accent); box-shadow:0 0 12px rgba(132,204,22,.55) }
-
-    .logs { position:absolute; left:12px; bottom:56px; width:min(700px,80vw); max-height:45vh; overflow:auto; background:rgba(15,23,42,.85); border:1px solid rgba(255,255,255,.08); border-radius:12px; padding:10px; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:12px; line-height:1.45; display:none }
-    .logs.active { display:block }
-    .log-line { white-space:pre-wrap; color:#cbd5e1 }
-    .log-line .ok { color:#86efac } .log-line .warn { color:#fbbf24 } .log-line .err { color:#fca5a5 }
-
-    /* Footer + lang switch */
-    footer { margin:32px 0 8px; color:var(--muted); font-size:13px; opacity:.9; text-align:center }
-    .lang { display:inline-flex; gap:8px; align-items:center; margin-top:8px }
-    .lang select { background:#0f1625; color:#e5e7eb; border:1px solid rgba(255,255,255,.10); border-radius:10px; padding:6px 10px; font-size:13px }
-
-    /* Responsive */
-    @media (max-width:720px) {
-      h1 { font-size:30px }
-      .btn { padding:12px 14px; font-size:16px; border-radius:12px }
-      .cta { gap:10px }
-      .cta-row { flex-wrap:wrap }
-      .join-inline { flex-wrap:nowrap }
-      .join-inline .input { min-width:0; width:56vw }
-      .slider { width:140px }
-      .copy input { width:58vw }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div class="container" id="landing">
-    <div class="hero">
-      <div class="brand"><span class="dot"></span><span style="opacity:.9;font-weight:700">ShareScreen.live</span></div>
-      <h1 id="t-title">🎬 Partage d’écran en un clic</h1>
-      <p class="muted" id="t-sub">Partagez votre écran en un clic grâce à WebRTC. Démarrez (hôte) ou rejoignez (spectateur). Pas de plein écran automatique.</p>
 
-      <div class="cta">
-        <div class="cta-row">
-          <button class="btn btn-primary" id="btnHost"><span id="t-start">Démarrer une session</span></button>
+<body class="beams">
+  <div class="container" id="landing" role="main">
+    <div class="hero" aria-labelledby="t-title" aria-describedby="t-sub">
+      <div class="brand">
+        <span class="dot" aria-hidden="true"></span>
+        <span class="name">ShareScreen.live</span>
+      </div>
+      <h1 id="t-title"></h1>
+
+      <p class="lead" id="t-sub"></p>
+
+      <div class="cta" aria-live="polite">
+        <button class="btn btn-primary btn-fullwidth" id="btnHost">
+          🚀 <span id="t-start"></span>
+        </button>
+
+        <div class="join-inline" style="margin-top:6px">
+          <input id="joinId" class="input" placeholder="Ex. abc123" maxlength="16" inputmode="latin"
+            title="3–64 lettres/chiffres/_-" />
+          <button class="btn btn-secondary" id="btnJoin">
+            <span id="t-join"></span>
+          </button>
         </div>
-        <div class="cta-row">
-          <div class="join-inline">
-            <button class="btn btn-secondary" id="btnJoin" title="Rejoindre"><span id="t-join">Rejoindre</span></button>
-            <input id="joinId" class="input" placeholder="Ex. abc123" maxlength="16" inputmode="latin" pattern="[a-zA-Z0-9_-]{3,64}" title="3–64 lettres/chiffres/_-" />
-          </div>
-        </div>
+
       </div>
 
       <footer id="site-footer">
-        <div id="t-footer">
-          Projet open-source. Vous aimez ? <a href="https://github.com/palpaga/ShareScreen" target="_blank" rel="noopener noreferrer">Disponible sur GitHub</a> et ouvert aux contributions. <a href="https://buymeacoffee.com/lamas" rel="nofollow">Soutenez le développement</a>.
-        </div>
+        <div id="t-footer"></div>
         <div class="lang">
-          <label for="langSel" id="t-lang-label">Langue</label>
+          <label for="langSel" id="t-lang-label"></label>
           <select id="langSel" aria-label="Language">
             <option value="fr">Français</option>
             <option value="en">English</option>
@@ -120,29 +51,30 @@
   </div>
 
   <!-- Stage fullscreen -->
-  <div class="stage" id="stage">
+  <div class="stage" id="stage" aria-hidden="true">
     <video id="video" autoplay playsinline></video>
     <div class="hud" aria-hidden="false">
       <div class="hud-top">
-        <span class="pill" id="statusPill">⏳ <span id="statusText">Initialisation…</span></span>
+        <span class="pill" id="statusPill">⏳ <span id="statusText"></span></span>
         <span class="pill" id="rolePill">—</span>
         <span class="pill" id="viewersPill" style="display:none">👥 <span id="viewerCount">0</span></span>
-        <span class="pill" id="statsPill" title="Stats vidéo" style="display:none">📊 <span id="statsText">—</span></span>
+        <span class="pill" id="statsPill" title="Stats vidéo" style="display:none">📊 <span
+            id="statsText">—</span></span>
         <div class="hud-right">
           <span class="pill copy" id="copyWrap" style="display:none">
             🔗 <input class="input" id="publicLink" readonly>
-            <button class="btn btn-secondary" id="btnCopy" title="Copier">Copier</button>
+            <button class="btn btn-secondary" id="btnCopy"></button>
           </span>
         </div>
       </div>
 
-      <div class="quit"><button class="btn-quit" id="btnQuitTop" title="Quitter">✖</button></div>
+      <div class="quit"><button class="btn-quit" id="btnQuitTop">✖</button></div>
 
       <div class="hud-bottom">
         <div class="left-controls">
           <div class="vol" id="volWrap" style="display:none">
-            <label for="volume" id="t-volume">Volume</label>
-            <input id="volume" class="slider" type="range" min="0" max="100" value="100">
+            <label for="volume" id="t-volume"></label>
+            <input id="volume" class="slider" type="range" min="0" max="100" value="0">
           </div>
           <button class="btn btn-secondary" id="btnLogs" title="Logs" aria-label="Logs">🧾</button>
         </div>
@@ -155,123 +87,7 @@
   </div>
 
   <!-- i18n + UI wiring -->
-  <script>
-    (function () {
-      const GITHUB = 'https://github.com/palpaga';
-
-      const dictMap = {
-        fr: {
-          title: '🎬 Partage d’écran en un clic',
-          sub: 'Partagez votre écran en un clic grâce à WebRTC. Démarrez (hôte) ou rejoignez (spectateur).',
-          start: 'Démarrer une session',
-          join: 'Rejoindre',
-          placeholder: 'Ex. abc123',
-          volume: 'Volume',
-          footer_html: `Projet open-source. Vous aimez ? <a href="${GITHUB}" target="_blank" rel="noopener noreferrer">Disponible sur GitHub</a> et ouvert aux contributions. <a href="#" rel="nofollow">Soutenez le développement</a>.`,
-          lang_label: 'Langue',
-          tooltip_join: 'Rejoindre',
-          tooltip_copy: 'Copier',
-          tooltip_quit: 'Quitter',
-          tooltip_logs: 'Logs',
-          tooltip_fullscreen: 'Plein écran (f)',
-          role_host: 'Hôte',
-          role_viewer: 'Spectateur',
-          status_init: 'Initialisation…',
-          status_wait_share: 'En attente du partage d’écran…',
-          status_started: 'Partage d’écran démarré',
-          status_copy_fail: 'Impossible de copier',
-          status_conn: 'Connexion…',
-          status_negotiating: 'Négociation…',
-          status_streaming: 'Diffusion en cours',
-          status_host_left: 'L’hôte a quitté la session.',
-          status_conn_failed: 'Connexion échouée',
-          status_session_end: 'Session terminée.',
-          status_session_quit: 'Session quittée.',
-          invalidId: 'ID invalide (3–64 lettres/chiffres/_-)',
-        },
-        en: {
-          title: '🎬 Screen sharing in one click',
-          sub: 'Share your screen in one click with WebRTC. Start (host) or join (viewer).',
-          start: 'Start session',
-          join: 'Join',
-          placeholder: 'e.g. abc123',
-          volume: 'Volume',
-          footer_html: `Open-source project. Like it? <a href="${GITHUB}" target="_blank" rel="noopener noreferrer">See it on GitHub</a> and contribute. <a href="https://buymeacoffee.com/lamas" rel="nofollow">Support the development</a>.`,
-          lang_label: 'Language',
-          tooltip_join: 'Join',
-          tooltip_copy: 'Copy',
-          tooltip_quit: 'Quit',
-          tooltip_logs: 'Logs',
-          tooltip_fullscreen: 'Fullscreen (f)',
-          role_host: 'Host',
-          role_viewer: 'Viewer',
-          status_init: 'Initializing…',
-          status_wait_share: 'Waiting for screen share…',
-          status_started: 'Screen sharing started',
-          status_copy_fail: 'Unable to copy',
-          status_conn: 'Connecting…',
-          status_negotiating: 'Negotiating…',
-          status_streaming: 'Streaming',
-          status_host_left: 'The host left the session.',
-          status_conn_failed: 'Connection failed',
-          status_session_end: 'Session ended.',
-          status_session_quit: 'Session left.',
-          invalidId: 'Invalid ID (3–64 letters/digits/_-)',
-        }
-      };
-
-      function getInitialLang() {
-        const saved = localStorage.getItem('lang');
-        if (saved && (saved === 'fr' || saved === 'en')) return saved;
-        return (navigator.language || navigator.userLanguage || 'en').toLowerCase().startsWith('fr') ? 'fr' : 'en';
-      }
-
-      function applyI18n(dict) {
-        const $ = s => document.querySelector(s);
-        $('#t-title').textContent = dict.title;
-        $('#t-sub').innerHTML = dict.sub;
-        $('#t-start').textContent = dict.start;
-        $('#t-join').textContent = dict.join;
-
-        const joinInput = $('#joinId');
-        if (joinInput) {
-          joinInput.placeholder = dict.placeholder;
-          joinInput.title = dict.invalidId;
-        }
-
-        const vLabel = $('#t-volume'); if (vLabel) vLabel.textContent = dict.volume;
-        const footer = document.getElementById('t-footer'); if (footer) footer.innerHTML = dict.footer_html;
-        const langLabel = document.getElementById('t-lang-label'); if (langLabel) langLabel.textContent = dict.lang_label;
-
-        // Tooltips / titles
-        const btnJoin = document.getElementById('btnJoin'); if (btnJoin) btnJoin.title = dict.tooltip_join;
-        const btnCopy = document.getElementById('btnCopy'); if (btnCopy) btnCopy.title = dict.tooltip_copy, btnCopy.textContent = dict.tooltip_copy;
-        const btnQuit = document.getElementById('btnQuitTop'); if (btnQuit) btnQuit.title = dict.tooltip_quit;
-        const btnLogs = document.getElementById('btnLogs'); if (btnLogs) btnLogs.title = dict.tooltip_logs;
-        const btnFs = document.getElementById('btnFullscreen'); if (btnFs) btnFs.title = dict.tooltip_fullscreen;
-
-        // Reset status pill to init (only on landing)
-        const statusText = document.getElementById('statusText'); if (statusText) statusText.textContent = dict.status_init;
-      }
-
-      const langSel = () => document.getElementById('langSel');
-
-      window.i18n = {
-        dictMap,
-        get lang() { return localStorage.getItem('lang') || getInitialLang(); },
-        set lang(v) { localStorage.setItem('lang', v); document.documentElement.lang = v; applyI18n(dictMap[v]); window.__i18n = dictMap[v]; },
-        t(key) { return (window.__i18n && window.__i18n[key]) || key; }
-      };
-
-      document.addEventListener('DOMContentLoaded', () => {
-        const initial = getInitialLang();
-        document.documentElement.lang = initial;
-        window.__i18n = dictMap[initial];
-        applyI18n(window.__i18n);
-        const sel = langSel(); if (sel) { sel.value = initial; sel.addEventListener('change', () => window.i18n.lang = sel.value); }
-      });
-    })();
-  </script>
+  <script src="i18n.js"></script>
 
   <script>
     (function () {
@@ -311,11 +127,11 @@
           if (!('wakeLock' in navigator)) return;
           if (enabled) window.__wl = await navigator.wakeLock.request('screen');
           else { await window.__wl?.release(); window.__wl = null; }
-        } catch {}
+        } catch { }
       }
 
       async function toggleFullscreen() {
-        try { await (document.fullscreenElement ? document.exitFullscreen() : stage.requestFullscreen()); } catch {}
+        try { await (document.fullscreenElement ? document.exitFullscreen() : stage.requestFullscreen()); } catch { }
       }
 
       const url = new URL(location.href);
@@ -330,7 +146,7 @@
         const proto = location.protocol === 'https:' ? 'wss' : 'ws';
         return `${proto}://${location.host}${path}?room=${encodeURIComponent(room)}&role=${role}`;
       }
-      function wsSend(obj) { try { if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); } catch {} }
+      function wsSend(obj) { try { if (ws && ws.readyState === 1) ws.send(JSON.stringify(obj)); } catch { } }
 
       async function getIceServers() {
         if (hardcodedTurn) return [{ urls: [] }];
@@ -339,7 +155,7 @@
         return j.iceServers ?? [];
       }
 
-      // ===== Stats (viewer) =====
+      // ===== Stats (viewer)
       let statsTimer = null; let lastBytes = 0; let lastTs = 0;
       function startStatsLoop(pc) {
         statsPill.style.display = 'inline-flex';
@@ -348,7 +164,7 @@
           try {
             const report = await pc.getStats();
             let fps = null; let w = videoEl.videoWidth || 0; let h = videoEl.videoHeight || 0; let bytes = null;
-            report.forEach((s) => { if (s.type === 'inbound-rtp' && s.kind === 'video') { fps = s.framesPerSecond ?? fps; bytes = s.bytesReceived ?? bytes; }});
+            report.forEach((s) => { if (s.type === 'inbound-rtp' && s.kind === 'video') { fps = s.framesPerSecond ?? fps; bytes = s.bytesReceived ?? bytes; } });
             const now = performance.now();
             let kbps = null;
             if (bytes != null) {
@@ -363,12 +179,12 @@
             if (typeof fps === 'number') parts.push(`${fps | 0} fps`);
             if (kbps != null) parts.push(`${kbps} kbps`);
             statsText.textContent = parts.join(' · ') || '—';
-          } catch {}
+          } catch { }
         }, 1000);
       }
       function stopStatsLoop() { clearInterval(statsTimer); statsTimer = null; statsText.textContent = '—'; statsPill.style.display = 'none'; }
 
-      // ===== Host =====
+      // ===== Host
       const peers = new Map();
       let screenStream = null, iceServers = [], viewerCount = 0;
 
@@ -420,18 +236,18 @@
         try {
           screenStream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30 }, audio: true });
           if (!screenStream.getAudioTracks().length) {
-            try { const mic = await navigator.mediaDevices.getUserMedia({ audio: true }); mic.getTracks().forEach(t => screenStream.addTrack(t)); } catch {}
+            try { const mic = await navigator.mediaDevices.getUserMedia({ audio: true }); mic.getTracks().forEach(t => screenStream.addTrack(t)); } catch { }
           }
           videoEl.srcObject = screenStream;
-          try { await videoEl.play(); } catch {}
+          try { await videoEl.play(); } catch { }
           setStatus(window.i18n.t('status_started'), true);
           screenStream.getVideoTracks()[0].addEventListener('ended', endAll);
         } catch (e) { setStatus('Capture refusée: ' + e.message); return; }
 
         ws = new WebSocket(wsUrl());
-        ws.onopen = () => log('ws connected (host)', 'ok');
-        ws.onclose = () => log('ws closed (host)', 'warn');
-        ws.onerror = () => log('ws error (host)', 'err');
+        ws.onopen = () => log('websocket connected (host)', 'ok');
+        ws.onclose = () => log('websocket closed (host)', 'warn');
+        ws.onerror = () => log('websocket error (host)', 'err');
         ws.onmessage = async (ev) => {
           let msg; try { msg = JSON.parse(ev.data); } catch { return; }
           if (!msg || typeof msg !== 'object') return;
@@ -467,7 +283,7 @@
             if (data?.sdp) {
               await pc.setRemoteDescription(new RTCSessionDescription(data.sdp));
             } else if (data?.candidate) {
-              try { await pc.addIceCandidate(new RTCIceCandidate(data.candidate)); } catch {}
+              try { await pc.addIceCandidate(new RTCIceCandidate(data.candidate)); } catch { }
             }
           }
         };
@@ -476,13 +292,13 @@
       }
 
       function endAll() {
-        try { document.exitFullscreen?.(); } catch {}
+        try { document.exitFullscreen?.(); } catch { }
         withWakeLock(false);
         stopStatsLoop();
         if (screenStream) { screenStream.getTracks().forEach(t => t.stop()); screenStream = null; }
-        for (const pc of peers.values()) try { pc.close(); } catch {}
+        for (const pc of peers.values()) try { pc.close(); } catch { }
         peers.clear();
-        try { ws?.close(); } catch {}
+        try { ws?.close(); } catch { }
         ws = null;
         videoEl.srcObject = null;
         viewerCount = 0; viewerCountEl.textContent = '0';
@@ -490,7 +306,7 @@
         setStatus(window.i18n.t('status_session_end'));
       }
 
-      // ===== Viewer =====
+      // ===== Viewer
       let vPc = null, vIceServers = [], currentHostId = null;
 
       async function ensureViewerPC() {
@@ -509,12 +325,12 @@
             }));
           }
         });
-        try { vPc.addTransceiver('video', { direction: 'recvonly' }); } catch {}
+        try { vPc.addTransceiver('video', { direction: 'recvonly' }); } catch { }
         vPc.ontrack = async (ev) => {
           videoEl.srcObject = ev.streams[0];
-          videoEl.muted = false;
+          videoEl.muted = true;
           volWrap.style.display = 'flex';
-          try { await videoEl.play(); } catch {}
+          try { await videoEl.play(); } catch (e) { console.debug('play blocked', e?.message); }
           setStatus(window.i18n.t('status_streaming'), true);
           startStatsLoop(vPc);
         };
@@ -525,12 +341,9 @@
         role = 'viewer';
         rolePill.textContent = window.i18n.t('role_viewer');
 
-        const manual = ($('#joinId').value || '').trim();
-        const sane = manual.replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64);
-        if (!sane || sane.length < 3) {
-          alert(window.i18n.t('invalidId'));
-          return;
-        }
+        const manual = ($('#joinId').value || '').trim() || location.hash.slice(1);
+        const sane = (manual || '').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64);
+        if (!sane || sane.length < 3) { alert(window.i18n.t('invalidId')); return; }
         location.hash = sane;
         room = sane;
 
@@ -541,9 +354,9 @@
         setStatus(window.i18n.t('status_conn'));
 
         ws = new WebSocket(wsUrl());
-        ws.onopen = () => log('ws connected (viewer)', 'ok');
-        ws.onclose = () => { log('ws closed (viewer)', 'warn'); };
-        ws.onerror = () => log('ws error (viewer)', 'err');
+        ws.onopen = () => log('websocket connected (viewer)', 'ok');
+        ws.onclose = () => { log('websocket closed (viewer)', 'warn'); };
+        ws.onerror = () => log('websocket error (viewer)', 'err');
         ws.onmessage = async (ev) => {
           let msg; try { msg = JSON.parse(ev.data); } catch { return; }
           if (!msg || typeof msg !== 'object') return;
@@ -570,7 +383,7 @@
               wsSend({ type: 'signal', target: 'host', data: { sdp: pc.localDescription } });
               setStatus(window.i18n.t('status_negotiating'));
             } else if (data?.candidate) {
-              try { await pc.addIceCandidate(new RTCIceCandidate(data.candidate)); } catch {}
+              try { await pc.addIceCandidate(new RTCIceCandidate(data.candidate)); } catch { }
             }
             return;
           }
@@ -578,9 +391,9 @@
       }
 
       function endViewer() {
-        try { document.exitFullscreen?.(); } catch {}
-        if (vPc) { try { vPc.close(); } catch {} vPc = null; }
-        try { ws?.close(); } catch {}
+        try { document.exitFullscreen?.(); } catch { }
+        if (vPc) { try { vPc.close(); } catch { } vPc = null; }
+        try { ws?.close(); } catch { }
         ws = null;
         stopStatsLoop();
         videoEl.srcObject = null;
@@ -588,7 +401,7 @@
         setStatus(window.i18n.t('status_session_quit'));
       }
 
-      // Wire
+      // Wire UI
       $('#btnHost').addEventListener('click', startHost);
       $('#btnJoin').addEventListener('click', startViewer);
       $('#btnLogs').addEventListener('click', () => logBox.classList.toggle('active'));
@@ -601,18 +414,23 @@
       if (volumeSlider) {
         volumeSlider.addEventListener('input', () => {
           const v = Math.max(0, Math.min(1, volumeSlider.value / 100));
-          videoEl.volume = v; videoEl.muted = v === 0;
+          videoEl.volume = v;
+          videoEl.muted = v === 0 ? true : false;
         });
+      }
+
+      const h = location.hash.slice(1);
+      if (h) {
+        const j = $('#joinId');
+        if (j) j.value = h;
+        setTimeout(() => { startViewer(); }, 200);
       }
 
       document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') { role === 'host' ? endAll() : endViewer(); }
-        if (e.key.toLowerCase() === 'f') { toggleFullscreen(); }
       });
-
-      const h = location.hash.slice(1);
-      if (h) { const j = $('#joinId'); if (j) j.value = h; }
     })();
   </script>
 </body>
+
 </html>
